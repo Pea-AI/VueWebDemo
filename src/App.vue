@@ -2,30 +2,38 @@
   <div class="app">
     <img alt="Vue logo"
          src="./assets/ton_ai_logo.png">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
     <!-- 使用 TonExchangeBannerWrapper 组件 -->
-    <div class="banner-wrapper">
+    <!-- <div class="banner-wrapper">
       <TonExchangeBannerWrapper :exchangeId="exchangeId" />
-    </div>
+    </div> -->
     <!-- 添加 Show Ad Popup 按钮 -->
     <button @click="showAdPopup">Show Ad Popup</button>
+    <!-- 添加 GetMulti Ad 按钮 -->
+    <button @click="getMultiAd">GetMulti Ad</button>
+    <button @click="getMultiExchangeAd">GetMulti Exchange Ad</button>
+    <!-- 增加一个 layout 用来展示 getMultiAd 返回的json 数据 -->
+    <div class="layout">
+      <pre>{{ multiAdData ? JSON.stringify(multiAdData, null, 2) : '暂无数据' }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-import TonExchangeBannerWrapper from './components/TonExchangeBannerWrapper.vue'
+// import TonExchangeBannerWrapper from './components/TonExchangeBannerWrapper.vue'
+// import 'ton-ai-sdk/dist/index.css'
+import 'ton-ai-sdk/dist/index.esm.css'
+import { TonAdInit, TonAdPopupShow, GetMultiTonAd } from 'ton-ai-sdk'
 
 export default {
   name: 'App',
   components: {
     // HelloWorld,
-    TonExchangeBannerWrapper
+    // TonExchangeBannerWrapper
   },
   data() {
     return {
-      // exchangeId: '670a6c94dd7fcddb8deacfbe' // 替换为实际的 exchangeId
-      exchangeId: '66f65d2d2ec147ec042aa504'
+      exchangeId: '670a6c94dd7fcddb8deacfbe',
+      multiAdData: null
     }
   },
   mounted() {
@@ -34,48 +42,30 @@ export default {
   methods: {
     initTonAd() {
       console.log('initTonAd')
-      if (typeof window.TonAISdk === 'object') {
-        this.runTonAdInit()
-      } else {
-        this.loadTonAdSDK()
-      }
+      TonAdInit({ appId: '670777796d32dfbd6351ecc1', debug: true })
     },
-    runTonAdInit() {
-      try {
-        // const appKey = 'qZCgcwmuo9NEqLJJl3NSVAV8qPjnpH'
-        const appKey = 'moJHPwHiGpSP7Lrz88xY1IAXXamF90'
 
-        const res = window.TonAISdk.TonAdInit({ appKey: appKey, debug: true })
-        console.log('TonAdInit 初始化结果:', res)
-      } catch (error) {
-        console.error('TonAdInit 初始化失败:', error)
-      }
-    },
-    loadTonAdSDK() {
-      const script = document.createElement('script')
-      script.src = 'https://cdn.jsdelivr.net/npm/ton-ai-sdk@2.1.8/dist/index.umd.js'
-      script.onload = () => {
-        console.log('TON AI SDK 加载成功')
-        setTimeout(() => {
-          if (typeof window.TonAISdk === 'object') {
-            this.runTonAdInit()
-          } else {
-            console.error('TonAdInit 函数仍未找到，请检查SDK是否正确导出该函数')
-          }
-        }, 100)
-      }
-      script.onerror = () => {
-        console.error('TON AI SDK 加载失败')
-      }
-      document.head.appendChild(script)
-    },
     showAdPopup() {
       // 触发广告弹窗
-      if (window.TonAISdk && window.TonAISdk.TonAdPopupShow) {
-        window.TonAISdk.TonAdPopupShow({ blockId: '66f65d8b2ec147ec042aa530' }) // 替换为实际的 blockId
-      } else {
-        console.error('TonAdPopupShow 函数未找到，请确保 SDK 已正确加载')
+      TonAdPopupShow({ blockId: '6718a53bb877e79f84e68bd5' })
+
+    },
+    async getMultiAd() {
+      try {
+        const result = await GetMultiTonAd(
+          '6718a53bb877e79f84e68bd5'
+        )
+        this.multiAdData = result
+        console.log('multiAdData', this.multiAdData)
+      } catch (error) {
+        console.error('获取广告数据失败:', error)
+        this.multiAdData = { error: '获取数据失败' }
       }
+
+    },
+    async getMultiExchangeAd() {
+      const result = await GetMultiExchangeAd('670a6c94dd7fcddb8deacfbe')
+      console.log('multiExchangeAdData', result)
     }
   }
 }
@@ -105,6 +95,22 @@ button {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+  background-color: #007bff72;
+  border-radius: 10px;
   cursor: pointer;
+}
+
+.layout {
+  margin-top: 20px;
+  width: 800px;
+  height: 600px;
+  text-align: left;
+  border: 1px solid #000;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
+  overflow: auto;
 }
 </style>

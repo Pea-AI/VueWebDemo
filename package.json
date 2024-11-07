@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ton-ai-sdk": "^2.1.15",
     "vue": "^3.2.13"
   },
   "devDependencies": {
