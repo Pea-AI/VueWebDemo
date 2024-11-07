@@ -22,7 +22,7 @@
 // import TonExchangeBannerWrapper from './components/TonExchangeBannerWrapper.vue'
 // import 'ton-ai-sdk/dist/index.css'
 import 'ton-ai-sdk/dist/index.esm.css'
-import { TonAdInit, TonAdPopupShow, GetMultiTonAd } from 'ton-ai-sdk'
+import { TonAdInit, TonAdPopupShow, GetMultiTonAd, GetMultiTonExchangeAd } from 'ton-ai-sdk'
 
 export default {
   name: 'App',
@@ -64,8 +64,9 @@ export default {
 
     },
     async getMultiExchangeAd() {
-      const result = await GetMultiExchangeAd('670a6c94dd7fcddb8deacfbe')
+      const result = await GetMultiTonExchangeAd('670a6c94dd7fcddb8deacfbe')
       console.log('multiExchangeAdData', result)
+      this.multiAdData = result
     }
   }
 }
