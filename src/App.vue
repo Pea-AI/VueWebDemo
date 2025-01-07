@@ -22,7 +22,7 @@
 // import TonExchangeBannerWrapper from './components/TonExchangeBannerWrapper.vue'
 // import 'ton-ai-sdk/dist/index.css'
 import 'ton-ai-sdk/dist/index.esm.css'
-import { TonAdInit, TonAdPopupShow, GetMultiTonAd, GetMultiTonExchangeAd } from 'ton-ai-sdk'
+import { TonAdInit, TonAdPopupShow, GetMultiTonAd, GetMultiTonExchangeAd, SetTelegramUserOpenId } from 'ton-ai-sdk'
 
 export default {
   name: 'App',
@@ -43,6 +43,7 @@ export default {
     initTonAd() {
       console.log('initTonAd')
       TonAdInit({ appId: '670777796d32dfbd6351ecc1', debug: true })
+      SetTelegramUserOpenId('1234567890')
     },
 
     showAdPopup() {
